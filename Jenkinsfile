@@ -1,13 +1,9 @@
 pipeline {
     agent any
-
     environment {
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        DOCKERHUB_USERNAME = 'jegadhish24'
-        IMAGE_NAME = 'jegadhish24/jenkins-node-app'
-        IMAGE_TAG = 'latest'
+        DOCKER_IMAGE = "jegadhish24/jenkins-node-app:latest"
+        DOCKER_HUB_CREDENTIALS = "docker-hub-credentials" // Set this in Jenkins Credentials
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -17,15 +13,15 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                    docker.build(DOCKER_IMAGE)
                 }
             }
         }
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', "${DOCKERHUB_CREDENTIALS}") {
-                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_CREDENTIALS) {
+                        docker.image(DOCKER_IMAGE).push()
                     }
                 }
             }
@@ -33,20 +29,17 @@ pipeline {
         stage('Run from Docker Hub') {
             steps {
                 script {
-                    sh """
-                        docker pull ${IMAGE_NAME}:${IMAGE_TAG}
-                        docker run -d --name my_app_container -p 8080:8080 ${IMAGE_NAME}:${IMAGE_TAG}
-                    """
+                    sh "docker run -d --rm --name my_app_container -p 3000:3000 ${DOCKER_IMAGE}"
                 }
             }
         }
     }
     post {
         always {
-            sh """
-                docker rm -f my_app_container || true
-                docker rmi ${IMAGE_NAME}:${IMAGE_TAG} || true
-            """
+            script {
+                sh "docker rm -f my_app_container || true"
+                sh "docker rmi ${DOCKER_IMAGE} || true"
+            }
         }
     }
 }
