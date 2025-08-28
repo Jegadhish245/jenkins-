@@ -1,27 +1,24 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "jegadhish24/jenkins-node-app:latest"
-        DOCKER_HUB_CREDENTIALS = "docker-hub-credentials" // Set this in Jenkins Credentials
+        IMAGE = 'jegadhish24/jenkins-node-app:latest'
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
+                    sh "docker build -t $IMAGE ."
                 }
             }
         }
         stage('Push to Docker Hub') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_CREDENTIALS) {
-                        docker.image(DOCKER_IMAGE).push()
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
+                        sh "docker push $IMAGE"
+                        sh "docker logout"
                     }
                 }
             }
@@ -29,7 +26,7 @@ pipeline {
         stage('Run from Docker Hub') {
             steps {
                 script {
-                    sh "docker run -d --rm --name my_app_container -p 3000:3000 ${DOCKER_IMAGE}"
+                    sh "docker run -d --rm --name my_app_container -p 3000:3000 $IMAGE"
                 }
             }
         }
@@ -38,7 +35,7 @@ pipeline {
         always {
             script {
                 sh "docker rm -f my_app_container || true"
-                sh "docker rmi ${DOCKER_IMAGE} || true"
+                sh "docker rmi $IMAGE || true"
             }
         }
     }
