@@ -1,9 +1,11 @@
-from flask import Flask, render_template
-print('hello')
-app = Flask(__name__)
-@app.route("/")
-def home():
-    return render_template('index.html')
+const express = require('express');
+const app = express();
 
-if __name__ == "__main__":
-    app.run(debug=True)
+app.get('/', (req, res) => {
+    res.send('Hello from Jenkins Docker Node.js App!');
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`App running on port ${PORT}`);
+});
