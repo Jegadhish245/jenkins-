@@ -1,19 +1,17 @@
-FROM node:18-alpine
+ Use official Python image
+FROM python:3.10-slim
 
-# Set working directory inside the image
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy app files
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install dependencies
-RUN npm install --production
-
-# Copy your source code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 8080
+# Expose port Flask runs on
+EXPOSE 5000
 
-# Start the application
-CMD ["node", "app.js"]
+# Run the application
+CMD ["python", "app.py"]
