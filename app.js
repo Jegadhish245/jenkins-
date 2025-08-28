@@ -1,9 +1,9 @@
-const express = require('express');
-const app = express();
-const PORT = 8080;
+from flask import Flask, render_template
+print('hello')
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return render_template('index.html')
 
-app.get('/', (req, res) => {
-  res.send('Hello from Dockerized Node.js App!');
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if __name__ == "__main__":
+    app.run(debug=True)
