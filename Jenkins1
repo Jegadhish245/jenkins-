@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
-        DOCKER_IMAGE = 'yourdockerhubusername/yourimagename'
+        DOCKERHUB_CREDENTIALS = 'docker-hub-crds'
+        DOCKER_IMAGE = 'jegadhihs24/yourimagename'
     }
 
     stages {
