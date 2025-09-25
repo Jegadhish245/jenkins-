@@ -1,11 +1,21 @@
-const express = require('express');
-const app = express();
-
-app.get('/', (req, res) => {
-    res.send('Hello from Jenkins Docker Node.js App!');
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`App running on port ${PORT}`);
-});
+{
+  "name": "node-app",
+  "version": "1.0.0",
+  "description": "A simple Node.js application for CI/CD",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest",
+    "dev": "nodemon server.js"
+    },
+  "jest": {
+    "testMatch": ["**/test/*.js"]
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "supertest": "^6.3.3"
+  }
+}
