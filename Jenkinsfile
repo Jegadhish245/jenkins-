@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE = 'jegadhish24/jenkins-node-app:latest'
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials'
+        DOCKER_HUB_CREDENTIALS = "docker-hub-crds"
     }
     stages {
         stage('Build Docker Image') {
