@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS) {
+                withDockerRegistry(credentialsId: 'docker-hub-crds')  {
                     script {
                         sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                         sh "docker push $IMAGE"
