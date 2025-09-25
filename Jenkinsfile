@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub-crds', url: "https://hub.docker.com/repositories/jegadhish24")  {
+                withDockerRegistry(credentialsId: 'docker-hub-crds', url: 'https://index.docker.io/v1/')  {
                     script {
                         sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                         sh "docker push $IMAGE"
