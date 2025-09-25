@@ -3,6 +3,7 @@ pipeline {
     environment {
         IMAGE = 'jegadhish24/jenkins-node-app:latest'
         DOCKER_HUB_CREDENTIALS = "docker-hub-crds"
+        DOCKER_USER = "jegadhish24"
     }
     stages {
         stage('Build Docker Image') {
