@@ -2,8 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE = 'jegadhish24/jenkins-node-app:latest'
-        DOCKER_HUB_CREDENTIALS = "docker-hub-crds"
-        DOCKER_USER = "jegadhish24"
+       
     }
     stages {
         stage('Build Docker Image') {
@@ -15,11 +14,11 @@ pipeline {
         }
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-hub-crds', url: 'https://index.docker.io/v1/')  {
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     script {
                         sh "echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin"
                         sh "docker push $IMAGE"
-                        sh "docker logout"
+                        sh "docker logout"  
                     }
                 }
             }
