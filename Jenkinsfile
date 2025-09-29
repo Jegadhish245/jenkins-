@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE = 'jegadhish24/jenkins-node-app:latest'
-       
+
     }
     stages {
         stage('Build Docker Image') {
